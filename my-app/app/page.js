@@ -1,101 +1,119 @@
-import Image from "next/image";
+"use client";
+import { Result } from "postcss";
+import { useState, useEffect } from "react";
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.js
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [questions, setquestions] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [ans,setAns]=useState([])
+  const [selectedOption, setSelectedOption] = useState("");
+  const [answeredQuestions, setAnsweredQuestions] = useState([]);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+  const fetchData = async () => {
+    let a = await fetch("/quesrtion.json");
+    let data = await a.json();
+    setquestions(data);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const next = () => {
+    setCurrentIndex((prevIndex) => {
+      if (prevIndex < questions.length - 1) {
+        return prevIndex + 1;
+      }
+      return prevIndex;
+    });
+  };
+
+  const prev = () => {
+    setCurrentIndex((prevIndex) => {
+      if (prevIndex > 0) {
+        return prevIndex - 1;
+      }
+      return prevIndex;
+    });
+  };
+
+  
+  const selectOption = (option) => {
+    setAns((prevAns) => {
+      const newAnswers = [...prevAns]; 
+      newAnswers[currentIndex] = option; 
+      return newAnswers; 
+    });
+  };
+  
+  const addResult = () => {
+    if (selectedOption && !answeredQuestions.includes(currentIndex)) {
+      const correctAnswer = questions[currentIndex].answer;
+      if (selectedOption === correctAnswer) {
+        setAns((prevAns) => [...prevAns, selectedOption]);
+      }
+      
+      setAnsweredQuestions((prevAnswered) => [...prevAnswered, currentIndex]);
+    }
+    console.log(ans)
+  };
+
+     
+  
+  let res=0
+  const submit =()=>{
+    for(let i=0;i<questions.length;i++){
+      if(ans[i]===questions[i].answer){
+       res++
+      }
+    }
+    {let quiz=document.getElementById("quiz")
+    let show=document.getElementById("show")
+    let box=document.getElementById("box")
+      quiz.style.display="none"
+      box.style.display=""
+      show.innerHTML=res+"/"+questions.length
+      
+    }
+  }
+  
+  return <>
+   
+    <button className="m-4 absolute top-0 left-0 border-2 border-gray-700 font-bold px-5 py-1 rounded-lg text-gray-950 bg-lime-500" onClick={submit} >Submit Quiz</button>
+
+    <div id="box" className="absolute top-28 left-1/2" style={{"display":"none"}}>
+        Result : <span id="show"></span>
     </div>
-  );
+
+    <div id="quiz" className="container mx-auto bg-gray-600 w-[50%] my-24 h-fit p-10 rounded-lg">
+      {questions.length > 0 && currentIndex < questions.length && (
+        <div>
+          <div>
+            <div className="text-xl mb-5">Q) {questions[currentIndex].question}</div>
+            <div className="flex flex-col gap-4">
+            <button className="text-start w-96 hover:bg-violet-600 active:bg-violet-700 focus:outline-none focus:ring focus:ring-violet-300   p-2 cursor-pointer" id="A" onClick={()=>selectOption('A')}>A) {questions[currentIndex].A}</button>
+            <button className="text-start w-96 hover:bg-violet-600 active:bg-violet-700 focus:outline-none focus:ring focus:ring-violet-300   p-2 cursor-pointer" id="B" onClick={()=>selectOption('B')}>B) {questions[currentIndex].B}</button>
+            <button className="text-start w-96 hover:bg-violet-600 active:bg-violet-700 focus:outline-none focus:ring focus:ring-violet-300   p-2 cursor-pointer" id="C" onClick={()=>selectOption('C')}>C) {questions[currentIndex].C}</button>
+            <button className="text-start w-96 hover:bg-violet-600 active:bg-violet-700 focus:outline-none focus:ring focus:ring-violet-300   p-2 cursor-pointer" id="D" onClick={()=>selectOption('D')}>D) {questions[currentIndex].D}</button>
+            </div>
+           
+          </div>
+        </div>
+      )}
+      <div className="mt-9 mb-4 flex justify-between">
+
+      <button className="bg-yellow-400 px-5 py-1 text-gray-800 rounded-lg font-bold" onClick={prev}>
+        prev
+      </button>
+      <button className="border-2 border-gray-700 font-bold px-5 py-1 rounded-lg text-gray-950 bg-lime-500" onClick={addResult}>Submit Selection</button>
+      <button className="bg-yellow-400 px-5 py-1 text-gray-800 rounded-lg font-bold" onClick={next}>
+        next
+      </button>
+     
+      </div>
+    </div>
+
+  </> 
+  
+  
 }
