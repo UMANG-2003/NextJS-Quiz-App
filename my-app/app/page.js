@@ -59,6 +59,7 @@ export default function Home() {
 
   let res = 0;
   const submit = () => {
+    alert("You want to submit this quiz");
     for (let i = 0; i < questions.length; i++) {
       if (ans[i] === questions[i].answer) {
         res++;
@@ -76,82 +77,77 @@ export default function Home() {
 
   return (
     <>
-      <button
-        className="m-4 absolute top-0 left-0 border-2 border-gray-700 font-bold px-5 py-1 rounded-lg text-gray-950 bg-lime-500"
-        onClick={submit}
-      >
-        Submit Quiz
-      </button>
-
-      <div
-        id="box"
-        className="absolute top-28 left-1/2"
-        style={{ display: "none" }}
-      >
+      <div id="box" className="" style={{ display: "none" }}>
         Result : <span id="show"></span>
       </div>
-
-      <div
-        id="quiz"
-        className="container mx-auto bg-gray-600 w-[50%] my-24 h-fit p-10 rounded-lg"
-      >
-        {questions.length > 0 && currentIndex < questions.length && (
-          <div>
+      <div id="quiz">
+        <div className="container mx-auto bg-gray-600 w-[50%] my-24 max-md:w-[80%] max-md:my-12 max-md:px-3 max-md:py-6  h-fit p-10  rounded-lg">
+          {questions.length > 0 && currentIndex < questions.length && (
             <div>
-              <div className="text-xl mb-5">
-                Q) {questions[currentIndex].question}
-              </div>
-              <div className="flex flex-col gap-4">
-                <button
-                  className="text-start w-96 hover:bg-violet-600 active:bg-violet-700 focus:outline-none focus:ring focus:ring-violet-300   p-2 cursor-pointer"
-                  id="A"
-                  onClick={() => selectOption("A")}
-                >
-                  A) {questions[currentIndex].A}
-                </button>
-                <button
-                  className="text-start w-96 hover:bg-violet-600 active:bg-violet-700 focus:outline-none focus:ring focus:ring-violet-300   p-2 cursor-pointer"
-                  id="B"
-                  onClick={() => selectOption("B")}
-                >
-                  B) {questions[currentIndex].B}
-                </button>
-                <button
-                  className="text-start w-96 hover:bg-violet-600 active:bg-violet-700 focus:outline-none focus:ring focus:ring-violet-300   p-2 cursor-pointer"
-                  id="C"
-                  onClick={() => selectOption("C")}
-                >
-                  C) {questions[currentIndex].C}
-                </button>
-                <button
-                  className="text-start w-96 hover:bg-violet-600 active:bg-violet-700 focus:outline-none focus:ring focus:ring-violet-300   p-2 cursor-pointer"
-                  id="D"
-                  onClick={() => selectOption("D")}
-                >
-                  D) {questions[currentIndex].D}
-                </button>
+              <div>
+                <div className=" mb-5">
+                  Q {currentIndex + 1} ) {questions[currentIndex].question}
+                </div>
+                <div className="flex flex-col gap-4">
+                  <button
+                    className="rounded-full text-start w-96 max-md:w-full hover:bg-violet-600 active:bg-violet-700 focus:outline-none focus:ring focus:ring-violet-300   p-2 cursor-pointer"
+                    id="A"
+                    onClick={() => selectOption("A")}
+                  >
+                    A) {questions[currentIndex].A}
+                  </button>
+                  <button
+                    className="rounded-full text-start w-96 max-md:w-full hover:bg-violet-600 active:bg-violet-700 focus:outline-none focus:ring focus:ring-violet-300   p-2 cursor-pointer"
+                    id="B"
+                    onClick={() => selectOption("B")}
+                  >
+                    B) {questions[currentIndex].B}
+                  </button>
+                  <button
+                    className="rounded-full text-start w-96 max-md:w-full hover:bg-violet-600 active:bg-violet-700 focus:outline-none focus:ring focus:ring-violet-300   p-2 cursor-pointer"
+                    id="C"
+                    onClick={() => selectOption("C")}
+                  >
+                    C) {questions[currentIndex].C}
+                  </button>
+                  <button
+                    className="rounded-full text-start w-96 max-md:w-full hover:bg-violet-600 active:bg-violet-700 focus:outline-none focus:ring focus:ring-violet-300   p-2 cursor-pointer"
+                    id="D"
+                    onClick={() => selectOption("D")}
+                  >
+                    D) {questions[currentIndex].D}
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        )}
-        <div className="mt-9 mb-4 flex justify-between">
+          )}
+        </div>
+        <div className="mt-9 mb-4 flex justify-between max-md:w-[80%] mx-auto">
           <button
-            className="bg-yellow-400 px-5 py-1 text-gray-800 rounded-lg font-bold"
+            className="bg-slate-950 text-white border-2 border-gray-500 px-5 py-1 text-gray-800 rounded-lg font-bold rounded-full"
             onClick={prev}
           >
             prev
           </button>
           <button
-            className="border-2 border-gray-700 font-bold px-5 py-1 rounded-lg text-gray-950 bg-lime-500"
+            className="border-2 border-lime-700 font-bold px-5 py-1 rounded-lg text-gray-950 text-lime-800 rounded-full"
             onClick={addResult}
           >
-            Submit Selection
+            Select
           </button>
           <button
-            className="bg-yellow-400 px-5 py-1 text-gray-800 rounded-lg font-bold"
+            className="bg-slate-950 text-white border-2 border-gray-500 px-5 py-1 text-gray-800 rounded-lg font-bold rounded-full"
             onClick={next}
           >
             next
+          </button>
+        </div>
+        <div className="flex justify-center py-8">
+          <button
+            className="bg-slate-950 text-gray-600 border-2 border-gray-500 px-5 py-1 text-gray-800 rounded-lg font-bold rounded-full"
+            onClick={submit}
+          >
+            Submit Quiz
           </button>
         </div>
       </div>
