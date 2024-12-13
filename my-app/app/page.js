@@ -1,6 +1,7 @@
 "use client";
+import Navbar from "@/components/Navbar";
 import { Result } from "postcss";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 export default function Home() {
   const [questions, setquestions] = useState([]);
@@ -74,9 +75,27 @@ export default function Home() {
       show.innerHTML = res + "/" + questions.length;
     }
   };
-
+  const [isExpanded, setIsExpanded] = useState(false);
+  let reff = useRef(null);
+  const sidebar = () => {
+    if (reff.current) {
+      setIsExpanded((prev) => !prev);
+    }
+    let imgg = document.getElementById("img-menu");
+    if (imgg.src.includes("hamburger.png")) {
+      imgg.src = "/cross-button.png";
+    } else {
+      imgg.src = "/hamburger.png";
+    }
+  };
   return (
     <>
+      <Navbar sidebar={sidebar}></Navbar>
+      <div
+        ref={reff}
+        className=" bg-white h-full absolute z-10 md:hidden"
+        style={{ width: isExpanded ? "60%" : "0%", transition: "1s" }}
+      ></div>
       <div id="box" className="" style={{ display: "none" }}>
         Result : <span id="show"></span>
       </div>
@@ -122,7 +141,7 @@ export default function Home() {
             </div>
           )}
         </div>
-        <div className="mt-9 mb-4 flex justify-between max-md:w-[80%] mx-auto">
+        <div className="mt-9 mb-4 flex justify-center w-full mx-auto gap-10">
           <button
             className="bg-slate-950 text-white border-2 border-gray-500 px-5 py-1 text-gray-800 rounded-lg font-bold rounded-full"
             onClick={prev}
