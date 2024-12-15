@@ -2,6 +2,9 @@
 import Navbar from "@/components/Navbar";
 import { Result } from "postcss";
 import { useState, useEffect, useRef } from "react";
+import Login from "./Login/page";
+import { useSession, signIn, signOut } from "next-auth/react";
+import Profile from "@/components/Profile";
 
 export default function Home() {
   const [questions, setquestions] = useState([]);
@@ -88,88 +91,105 @@ export default function Home() {
       imgg.src = "/hamburger.png";
     }
   };
-  return (
-    <>
-      <Navbar sidebar={sidebar}></Navbar>
-      <div
-        ref={reff}
-        className=" bg-white h-full absolute z-10 md:hidden"
-        style={{ width: isExpanded ? "60%" : "0%", transition: "1s" }}
-      ></div>
-      <div id="box" className="" style={{ display: "none" }}>
-        Result : <span id="show"></span>
-      </div>
-      <div id="quiz">
-        <div className="container mx-auto bg-gray-600 w-[50%] my-24 max-md:w-[80%] max-md:my-12 max-md:px-3 max-md:py-6  h-fit p-10  rounded-lg">
-          {questions.length > 0 && currentIndex < questions.length && (
-            <div>
+  
+  const profileHandle=()=>{
+    const profile = document.getElementById("profile");
+    if (profile) {
+      profile.classList.toggle("show");
+    }
+    }
+ 
+  const { data: session } = useSession();
+  if (session) {
+    return (
+      <>
+        <Navbar sidebar={sidebar} profileHandle={profileHandle}></Navbar>
+        <Profile></Profile>
+        <div
+          ref={reff}
+          className=" bg-white h-full absolute z-10 md:hidden"
+          style={{ width: isExpanded ? "60%" : "0%", transition: "1s" }}
+        ></div>
+        <div id="box" className="" style={{ display: "none" }}>
+          Result : <span id="show"></span>
+        </div>
+        <div id="quiz">
+          <div className="container mx-auto bg-gray-600 w-[50%] my-24 max-md:w-[80%] max-md:my-12 max-md:px-3 max-md:py-6  h-fit p-10  rounded-lg">
+            {questions.length > 0 && currentIndex < questions.length && (
               <div>
-                <div className=" mb-5">
-                  Q {currentIndex + 1} ) {questions[currentIndex].question}
-                </div>
-                <div className="flex flex-col gap-4">
-                  <button
-                    className="rounded-full text-start w-96 max-md:w-full hover:bg-violet-600 active:bg-violet-700 focus:outline-none focus:ring focus:ring-violet-300   p-2 cursor-pointer"
-                    id="A"
-                    onClick={() => selectOption("A")}
-                  >
-                    A) {questions[currentIndex].A}
-                  </button>
-                  <button
-                    className="rounded-full text-start w-96 max-md:w-full hover:bg-violet-600 active:bg-violet-700 focus:outline-none focus:ring focus:ring-violet-300   p-2 cursor-pointer"
-                    id="B"
-                    onClick={() => selectOption("B")}
-                  >
-                    B) {questions[currentIndex].B}
-                  </button>
-                  <button
-                    className="rounded-full text-start w-96 max-md:w-full hover:bg-violet-600 active:bg-violet-700 focus:outline-none focus:ring focus:ring-violet-300   p-2 cursor-pointer"
-                    id="C"
-                    onClick={() => selectOption("C")}
-                  >
-                    C) {questions[currentIndex].C}
-                  </button>
-                  <button
-                    className="rounded-full text-start w-96 max-md:w-full hover:bg-violet-600 active:bg-violet-700 focus:outline-none focus:ring focus:ring-violet-300   p-2 cursor-pointer"
-                    id="D"
-                    onClick={() => selectOption("D")}
-                  >
-                    D) {questions[currentIndex].D}
-                  </button>
+                <div>
+                  <div className=" mb-5">
+                    Q {currentIndex + 1} ) {questions[currentIndex].question}
+                  </div>
+                  <div className="flex flex-col gap-4">
+                    <button
+                      className="rounded-full text-start w-96 max-md:w-full hover:bg-violet-600 active:bg-violet-700 focus:outline-none focus:ring focus:ring-violet-300   p-2 cursor-pointer"
+                      id="A"
+                      onClick={() => selectOption("A")}
+                    >
+                      A) {questions[currentIndex].A}
+                    </button>
+                    <button
+                      className="rounded-full text-start w-96 max-md:w-full hover:bg-violet-600 active:bg-violet-700 focus:outline-none focus:ring focus:ring-violet-300   p-2 cursor-pointer"
+                      id="B"
+                      onClick={() => selectOption("B")}
+                    >
+                      B) {questions[currentIndex].B}
+                    </button>
+                    <button
+                      className="rounded-full text-start w-96 max-md:w-full hover:bg-violet-600 active:bg-violet-700 focus:outline-none focus:ring focus:ring-violet-300   p-2 cursor-pointer"
+                      id="C"
+                      onClick={() => selectOption("C")}
+                    >
+                      C) {questions[currentIndex].C}
+                    </button>
+                    <button
+                      className="rounded-full text-start w-96 max-md:w-full hover:bg-violet-600 active:bg-violet-700 focus:outline-none focus:ring focus:ring-violet-300   p-2 cursor-pointer"
+                      id="D"
+                      onClick={() => selectOption("D")}
+                    >
+                      D) {questions[currentIndex].D}
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
+          <div className="mt-9 mb-4 flex justify-center w-full mx-auto gap-10">
+            <button
+              className="bg-slate-950 text-white border-2 border-gray-500 px-5 py-1 text-gray-800 rounded-lg font-bold rounded-full"
+              onClick={prev}
+            >
+              prev
+            </button>
+            <button
+              className="border-2 border-lime-700 font-bold px-5 py-1 rounded-lg text-gray-950 text-lime-800 rounded-full"
+              onClick={addResult}
+            >
+              Select
+            </button>
+            <button
+              className="bg-slate-950 text-white border-2 border-gray-500 px-5 py-1 text-gray-800 rounded-lg font-bold rounded-full"
+              onClick={next}
+            >
+              next
+            </button>
+          </div>
+          <div className="flex justify-center py-8">
+            <button
+              className="bg-slate-950 text-gray-600 border-2 border-gray-500 px-5 py-1 text-gray-800 rounded-lg font-bold rounded-full"
+              onClick={submit}
+            >
+              Submit Quiz
+            </button>
+          </div>
         </div>
-        <div className="mt-9 mb-4 flex justify-center w-full mx-auto gap-10">
-          <button
-            className="bg-slate-950 text-white border-2 border-gray-500 px-5 py-1 text-gray-800 rounded-lg font-bold rounded-full"
-            onClick={prev}
-          >
-            prev
-          </button>
-          <button
-            className="border-2 border-lime-700 font-bold px-5 py-1 rounded-lg text-gray-950 text-lime-800 rounded-full"
-            onClick={addResult}
-          >
-            Select
-          </button>
-          <button
-            className="bg-slate-950 text-white border-2 border-gray-500 px-5 py-1 text-gray-800 rounded-lg font-bold rounded-full"
-            onClick={next}
-          >
-            next
-          </button>
-        </div>
-        <div className="flex justify-center py-8">
-          <button
-            className="bg-slate-950 text-gray-600 border-2 border-gray-500 px-5 py-1 text-gray-800 rounded-lg font-bold rounded-full"
-            onClick={submit}
-          >
-            Submit Quiz
-          </button>
-        </div>
-      </div>
+      </>
+    );
+  }
+  return (
+    <>
+      <Login></Login>
     </>
   );
 }
